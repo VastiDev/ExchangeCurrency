@@ -1,25 +1,30 @@
 package com.example.exchange.exchangerate.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-
+import com.example.exchange.currencypair.domain.CurrencyPair;
+import com.example.exchange.exchangerate.application.api.ExchangeRateRequest;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
+@Setter
 @ToString
+@Entity
 @NoArgsConstructor
+@AllArgsConstructor
 public class ExchangeRate {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(columnDefinition = "uuid", name = "idExchangeRate", updatable = false, unique = true, nullable = false)
-    private UUID id;
-    private BigDecimal rate;
-    private Timestamp hourPost;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id_exchange", updatable = false, nullable = false)
+    private UUID idExchange;
+    private BigDecimal bid;
+    private LocalDateTime timestamp;
+    private BigDecimal amount;
+    @OneToOne(optional = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_currency_pair")
+    private CurrencyPair currencyPair;
 }
